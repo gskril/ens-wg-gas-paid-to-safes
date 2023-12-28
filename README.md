@@ -14,7 +14,7 @@ Create a `.env` file and enter your [Etherscan API key](https://docs.etherscan.i
 cp .env.example .env
 ```
 
-Run the script
+Customize the [Safe addresses](https://github.com/gskril/ens-wg-gas-paid-to-safes/blob/main/src/etherscan.ts#L15-L36) and [block range](https://github.com/gskril/ens-wg-gas-paid-to-safes/blob/main/src/etherscan.ts#L52-L53) you want to query gas spending for in `./src/etherscan.ts`, then run the script
 
 ```bash
 yarn start
