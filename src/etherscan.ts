@@ -38,6 +38,9 @@ export async function getTransactionsFromEtherscan(): Promise<
   for (const address of workingGroupSafes) {
     const transactions = await getTransactionsFromOneAddress(address)
     allTransactions.push(...transactions)
+
+    // Slow requests to avoid rate limiting
+    await new Promise((resolve) => setTimeout(resolve, 500))
   }
 
   return allTransactions
