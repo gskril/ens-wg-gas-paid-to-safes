@@ -23,13 +23,14 @@ fs.readdirSync('./output').forEach((file) => {
 const gasSpenders = transactions.reduce((acc, curr) => {
   const existing = acc.find((tx) => tx.from === curr.from)
   if (existing) {
-    existing.gas += curr.gas
+    existing.gas += curr.gas // Ensure curr.gas is a number
+    existing.transactionCount += 1
   } else {
-    acc.push({ from: curr.from, gas: curr.gas })
+    acc.push({ from: curr.from, gas: curr.gas, transactionCount: 1 }) // Ensure curr.gas is a number
   }
 
   return acc
-}, [] as { from: Address; gas: number; name?: string }[])
+}, [] as { from: Address; gas: number; transactionCount: number; name?: string }[])
 
 const gasSpendersEnsNames = await Promise.all(
   gasSpenders.map((account) => ethClient.getEnsName({ address: account.from }))
@@ -55,6 +56,9 @@ console.table(filteredGasSpenders)
 fs.writeFileSync(
   `./output/gas-spending.csv`,
   filteredGasSpenders
-    .map((account) => `${account.name},${account.from},${account.gas}`)
+    .map(
+      (account) =>
+        `${account.name},${account.from},${account.gas},${account.transactionCount}`
+    )
     .join('\n')
 )
