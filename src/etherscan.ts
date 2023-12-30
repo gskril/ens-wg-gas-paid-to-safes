@@ -49,8 +49,8 @@ async function getTransactionsFromOneAddress(address: Address) {
   const params = new URLSearchParams({
     module: 'account',
     action: 'txlist',
-    startblock: '0',
-    endBlock: '17663941',
+    startblock: '17663942',
+    endBlock: 'latest',
     address,
     sort: 'asc',
     apikey: process.env.ETHERSCAN_API_KEY!,
@@ -83,11 +83,11 @@ async function getTransactionsFromOneAddress(address: Address) {
     }[]
   }
 
-  const transactions = res.result
-
-  if (!transactions) {
-    throw new Error('Error getting transactions from Etherscan')
+  if (res.message === 'NOTOK') {
+    throw new Error(res.result.toString())
   }
+
+  const transactions = res.result
 
   // We only care about transactions that call `execTransaction` on one of the Safes
   const filteredTransactions = transactions.filter((txn) => {
